@@ -354,20 +354,6 @@ export const VipLockScreen: React.FC<VipLockScreenProps> = ({ onUnlock }) => {
               <span>💎</span>
               <span>شراء كود VIP</span>
             </button>
-
-            {/* Quick Demo Access Button */}
-            <button
-              id="vipDemoBtn"
-              type="button"
-              onClick={() => {
-                setCode('VIP2026');
-                verifyAndUnlock('VIP2026', false);
-              }}
-              className="w-full py-2.5 bg-white/[0.03] hover:bg-white/[0.08] border border-slate-700/60 rounded-xl text-xs text-slate-400 hover:text-emerald-400 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-            >
-              <span>⚡</span>
-              <span>دخول تجريبي سريع (VIP2026)</span>
-            </button>
           </form>
 
           {/* Success Overlay Screen */}
