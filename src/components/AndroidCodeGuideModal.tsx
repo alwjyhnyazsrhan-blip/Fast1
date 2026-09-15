@@ -57,6 +57,8 @@ export const AndroidCodeGuideModal: React.FC = () => {
 │   │   ├── proguard-rules.pro                  # قواعد حماية الكود
 │   │   └── src/main/
 │   │       ├── AndroidManifest.xml             # جميع الصلاحيات (ACCESS_FINE_LOCATION, Foreground Services, Accessibility)
+│   │       ├── assets/                         # حزمة ملفات الويب المحدثة المدمجة (Capacitor/Assets Sync)
+│   │       │   └── public/                     # أصول React والتحكم المستقل لمسافة المطعم والعميل
 │   │       ├── java/com/locatego/driver/
 │   │       │   ├── MainActivity.kt             # واجهة التطبيق الموحدة الحاضنة للوحة التحكم (Single App Architecture)
 │   │       │   ├── LocateGoNativeBridge.kt     # جسر التواصل البرمجي التفاعلي (@JavascriptInterface) بين React والأندرويد
@@ -1040,21 +1042,33 @@ class MainActivity : AppCompatActivity() {
         rootLayout.addView(progressBar)
         setContentView(rootLayout)
 
+        // إعدادات الـ WebView المتقدمة لتشغيل واجهة React الحديثة بكامل قدراتها
+        try {
+            webView.clearCache(true)
+            webView.clearFormData()
+            WebStorage.getInstance().deleteAllData()
+            CookieManager.getInstance().flush()
+        } catch (e: Exception) {
+            // ignore
+        }
+
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
             databaseEnabled = true
             allowFileAccess = true
             allowContentAccess = true
+            allowFileAccessFromFileURLs = true
+            allowUniversalAccessFromFileURLs = true
             useWideViewPort = true
             loadWithOverviewMode = true
             setSupportZoom(false)
             builtInZoomControls = false
             displayZoomControls = false
-            cacheMode = WebSettings.LOAD_DEFAULT
+            cacheMode = WebSettings.LOAD_NO_CACHE // تفريغ أي كاش قديم وجلب أحدث الملفات دائماً
             mediaPlaybackRequiresUserGesture = false
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-            userAgentString = "\${userAgentString} LocateGoDriverApp/1.0.0"
+            userAgentString = "\${userAgentString} LocateGoDriverApp/1.2.0 (DualDistance; NoCache)"
         }
 
         webView.addJavascriptInterface(bridge, "LocateGoNative")
@@ -1078,6 +1092,12 @@ class MainActivity : AppCompatActivity() {
                 super.onReceivedError(view, request, error)
                 if (request?.isForMainFrame == true) {
                     progressBar.visibility = View.GONE
+                    // Fallback فوري إلى ملفات الويب المحدثة المدمجة داخل الـ APK (Capacitor/Assets)
+                    val localAssetUrl = "file:///android_asset/public/index.html"
+                    if (view?.url != localAssetUrl) {
+                        view?.loadUrl(localAssetUrl)
+                        Toast.makeText(this@MainActivity, "تم تحميل الواجهة المدمجة داخل التطبيق (Offline Mode)", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
@@ -1093,6 +1113,34 @@ class MainActivity : AppCompatActivity() {
 
         val dashboardUrl = renderClient.baseUrl
         webView.loadUrl(dashboardUrl)
+    }
+
+    /**
+     * تفريغ كاش الـ WebView والـ Storage وإعادة تحميل الواجهة المحدثة فوراً
+     */
+    fun clearWebViewCacheAndReload() {
+        try {
+            webView.clearCache(true)
+            webView.clearFormData()
+            webView.clearHistory()
+            WebStorage.getInstance().deleteAllData()
+            CookieManager.getInstance().removeAllCookies(null)
+            CookieManager.getInstance().flush()
+            Toast.makeText(this, "🧹 تم تفريغ الكاش بالكامل وجلب أحدث نسخة للواجهة", Toast.LENGTH_SHORT).show()
+            val dashboardUrl = renderClient.baseUrl
+            webView.loadUrl(dashboardUrl)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    /**
+     * تحميل واجهة الأصول المدمجة محلياً داخل التطبيق
+     */
+    fun loadLocalAssets() {
+        val localAssetUrl = "file:///android_asset/public/index.html"
+        webView.loadUrl(localAssetUrl)
+        Toast.makeText(this, "📦 تم تفعيل واجهة التطبيق المدمجة محلياً", Toast.LENGTH_SHORT).show()
     }
 
     fun syncStateToWeb() {

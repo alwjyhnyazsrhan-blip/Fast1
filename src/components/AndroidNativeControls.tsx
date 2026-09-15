@@ -12,7 +12,8 @@ import {
   Radio,
   RefreshCw,
   Target,
-  Zap
+  Zap,
+  Trash2
 } from 'lucide-react';
 import { getNativeBridge, isRunningInAndroidApp } from '../utils/nativeBridge';
 import { LocateGoSettings, LocateGoStatus } from '../types';
@@ -128,13 +129,30 @@ export const AndroidNativeControls: React.FC<AndroidNativeControlsProps> = ({
         </div>
 
         {isAndroid && (
-          <button
-            onClick={refreshNativeState}
-            className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 bg-cyan-950/40 border border-cyan-800/40 px-3 py-1.5 rounded-lg cursor-pointer active:scale-95 transition-all"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>تحديث حالة النظام</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                const bridge = getNativeBridge();
+                if (bridge && bridge.clearCacheAndReload) {
+                  bridge.clearCacheAndReload();
+                } else {
+                  window.location.reload();
+                }
+              }}
+              title="تفريغ كاش الـ WebView بالكامل وجلب أحدث كود للواجهة"
+              className="flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 bg-amber-950/40 border border-amber-800/40 px-3 py-1.5 rounded-lg cursor-pointer active:scale-95 transition-all"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>تفريغ الكاش</span>
+            </button>
+            <button
+              onClick={refreshNativeState}
+              className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 bg-cyan-950/40 border border-cyan-800/40 px-3 py-1.5 rounded-lg cursor-pointer active:scale-95 transition-all"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>تحديث حالة النظام</span>
+            </button>
+          </div>
         )}
       </div>
 

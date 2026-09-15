@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
+    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs && npm run sync:android",
+    "sync:android": "rm -rf android/app/src/main/assets/* && mkdir -p android/app/src/main/assets/public && cp -rf dist/* android/app/src/main/assets/ && cp -rf dist/* android/app/src/main/assets/public/ && rm -f android/app/src/main/assets/server.cjs* android/app/src/main/assets/public/server.cjs*",
     "start": "node dist/server.cjs",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",

@@ -1,0 +1,15 @@
+{
+  "appId": "com.locatego.driver",
+  "appName": "LocateGo Driver",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true
+  },
+  "server": {
+    "cleartext": true,
+    "androidScheme": "https"
+  }
+}

@@ -12,6 +12,8 @@ export interface LocateGoNativeInterface {
   toggleFloatingOverlay(): void;
   requestBatteryOptimization(): void;
   showToast(message: string): void;
+  clearCacheAndReload?(): void;
+  loadEmbeddedAssets?(): void;
 }
 
 declare global {

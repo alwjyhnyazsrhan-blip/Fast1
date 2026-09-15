@@ -182,4 +182,24 @@ class LocateGoNativeBridge(private val activity: MainActivity) {
             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
         }
     }
+
+    /**
+     * تفريغ كاش الـ WebView والـ Storage وإعادة تحميل الواجهة المحدثة فوراً
+     */
+    @JavascriptInterface
+    fun clearCacheAndReload() {
+        activity.runOnUiThread {
+            activity.clearWebViewCacheAndReload()
+        }
+    }
+
+    /**
+     * تحميل واجهة الأصول المدمجة محلياً داخل التطبيق (file:///android_asset/public/index.html)
+     */
+    @JavascriptInterface
+    fun loadEmbeddedAssets() {
+        activity.runOnUiThread {
+            activity.loadLocalAssets()
+        }
+    }
 }
