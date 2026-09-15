@@ -32,7 +32,7 @@ class LocateGoNativeBridge(private val activity: MainActivity) {
             put("soundAlerts", prefs.getBoolean("sound_alerts", true))
             put("minPayoutSar", prefs.getFloat("min_payout_sar", 0.0f).toDouble())
             put("vibrationFeedback", prefs.getBoolean("vibration_feedback", true))
-            put("renderUrl", prefs.getString("render_url", "https://fast-34v4.onrender.com"))
+            put("renderUrl", prefs.getString("render_url", "https://fast1-tjwg.onrender.com"))
         }
         return json.toString()
     }

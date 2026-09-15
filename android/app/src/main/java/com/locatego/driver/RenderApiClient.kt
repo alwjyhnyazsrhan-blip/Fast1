@@ -21,7 +21,15 @@ class RenderApiClient(private val context: Context) {
     private val prefs = context.getSharedPreferences("locate_go_prefs", Context.MODE_PRIVATE)
 
     var baseUrl: String
-        get() = prefs.getString("render_url", "https://fast-34v4.onrender.com") ?: "https://fast-34v4.onrender.com"
+        get() {
+            val url = prefs.getString("render_url", "https://fast1-tjwg.onrender.com") ?: "https://fast1-tjwg.onrender.com"
+            return if (url.contains("fast-34v4")) {
+                prefs.edit().putString("render_url", "https://fast1-tjwg.onrender.com").apply()
+                "https://fast1-tjwg.onrender.com"
+            } else {
+                url
+            }
+        }
         set(value) {
             // إزالة أي مسافات أو أحرف اتجاه خفية (RTL/LTR marks) قد تدرجها لوحة المفاتيح العربية
             var clean = value.trim()

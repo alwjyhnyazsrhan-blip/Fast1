@@ -36,7 +36,7 @@ export const AndroidCodeGuideModal: React.FC = () => {
     | 'root_gradle'
     | 'github_actions'
   >('tree');
-  const [renderUrl, setRenderUrl] = useState<string>('https://your-locate-go.onrender.com');
+  const [renderUrl, setRenderUrl] = useState<string>('https://fast1-tjwg.onrender.com');
   const [refreshIntervalMs, setRefreshIntervalMs] = useState<number>(1500);
 
   const copyToClipboard = (text: string, key: string) => {
